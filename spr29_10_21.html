@@ -4,30 +4,61 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>sprawdzian 21.10.2021</title>
+    <title>Document</title>
 </head>
-<body>
-    <div id="logowanie"></div>
+<body onload="init()">
+    <h1>menadżer haseł</h1>
     <form>
-        <input type="text" name="" id="login" placeholder="login" required>
-        <input type="text" name="" id="haslo" placeholder="haslo" required>
-        <button onclick="zaloguj()">zaloguj</button>
+        <label for="login">Login</label><br>
+        <input type="text" id="login" name=""><br>
+        <label for="passwd">Hasło</label><br>
+        <input type="text" id="psswd" name=""><br>
+        <input type="submit" value="Zapisz" onclick="save()"><br>
     </form>
+    <p>Spis haseł</p>
+    <div id="table"></div>
 
     <script>
+        function init() {
+            load()
+            }
+            function save() {
+            var login = document.getElementById("login").value;
+            var password = document.getElementById("psswd").value;
+            var data = [login, password];
 
-        function zaloguj() {
+            var oldData = JSON.parse(localStorage.getItem('data'));
+            if(oldData == null)
+                oldData = Array();
+            oldData.push(data);
+            localStorage.setItem('data', JSON.stringify(oldData));
+            load();
+            }
 
-            let login1 = document.getElementById('login').value;
-            let haslo = document.getElementById('haslo').value;
+         function load() {
+                let tableDiv = document.getElementById('table');
+                let dataArray = JSON.parse(window.localStorage.getItem('data'));
+                let buffer = "";
+            buffer += "<ul>";
+            for(let i=0; i< dataArray.length; i++) {
+                buffer += "<li>login: "+dataArray[i][0]+
+                    " Hasło: "+dataArray[i][1]+
+                    "<button onclick=\"usun("+i+")\">Usuń</button>"+"</li>";
+            }
+            buffer += "</ul>";
+            tableDiv.innerHTML = buffer;
+            }
+        
+        function usun(i) {
+            let taskArray = JSON.parse(window.localStorage.getItem('data'));
+            taskArray.splice(i, 1);
+            window.localStorage.setItem('data', JSON.stringify(taskArray));
+            load();
+            }
+                
 
-            window.localStorage.setItem('login', login);
-            window.localStorage.setItem('haslo', haslo);
-
-
-            logowanie.push(zaloguj);
-        }
-
+    
+        
 
     </script>
 </body>
